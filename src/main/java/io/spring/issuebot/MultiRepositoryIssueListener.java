@@ -16,29 +16,34 @@
 
 package io.spring.issuebot;
 
+import io.spring.issuebot.MonitoringProperties.Repository;
 import io.spring.issuebot.github.Issue;
 
 /**
- * An {@code IssueListener} is notified of issues found during monitoring of a specific
- * repository.
+ * An {@code IssueListener} is notified of issues found during monitoring of all
+ * repositories.
  *
  * @author Andy Wilkinson
  */
-public interface IssueListener {
+public interface MultiRepositoryIssueListener {
 
 	/**
-	 * Notification that the given {@code issue} is open.
+	 * Notification that, in the given {@code repository}, the given {@code issue} is
+	 * open.
+	 * @param repository the repository to which the issue belongs
 	 * @param issue the open issue
 	 */
-	default void onOpenIssue(Issue issue) {
+	default void onOpenIssue(Repository repository, Issue issue) {
 
 	}
 
 	/**
-	 * Notification that the given {@code issue} is being closed.
-	 * @param issue the open issue
+	 * Notification that, in the give {@code repository}, the given {@code issue} is being
+	 * closed.
+	 * @param repository the repository to which the issue belongs
+	 * @param issue the issue that is being closed
 	 */
-	default void onIssueClosure(Issue issue) {
+	default void onIssueClosure(Repository repository, Issue issue) {
 
 	}
 

@@ -16,8 +16,6 @@
 
 package io.spring.issuebot;
 
-import java.util.List;
-
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.NestedConfigurationProperty;
 
@@ -30,18 +28,7 @@ import org.springframework.boot.context.properties.NestedConfigurationProperty;
 public class GitHubProperties {
 
 	@NestedConfigurationProperty
-	private Repository repository = new Repository();
-
-	@NestedConfigurationProperty
 	private Credentials credentials = new Credentials();
-
-	public Repository getRepository() {
-		return this.repository;
-	}
-
-	public void setRepository(Repository repository) {
-		this.repository = repository;
-	}
 
 	public Credentials getCredentials() {
 		return this.credentials;
@@ -49,52 +36,6 @@ public class GitHubProperties {
 
 	public void setCredentials(Credentials credentials) {
 		this.credentials = credentials;
-	}
-
-	/**
-	 * Configuration for a GitHub repository.
-	 */
-	public static class Repository {
-
-		/**
-		 * The name of the organization that owns the repository.
-		 */
-		private String organization;
-
-		/**
-		 * The name of the repository.
-		 */
-		private String name;
-
-		/**
-		 * The names of the repository's collaborators.
-		 */
-		private List<String> collaborators;
-
-		public String getOrganization() {
-			return this.organization;
-		}
-
-		public void setOrganization(String organization) {
-			this.organization = organization;
-		}
-
-		public String getName() {
-			return this.name;
-		}
-
-		public void setName(String name) {
-			this.name = name;
-		}
-
-		public List<String> getCollaborators() {
-			return this.collaborators;
-		}
-
-		public void setCollaborators(List<String> collaborators) {
-			this.collaborators = collaborators;
-		}
-
 	}
 
 	/**

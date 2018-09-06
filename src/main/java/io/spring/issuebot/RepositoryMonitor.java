@@ -18,6 +18,7 @@ package io.spring.issuebot;
 
 import java.util.List;
 
+import io.spring.issuebot.MonitoringProperties.Repository;
 import io.spring.issuebot.github.GitHubOperations;
 import io.spring.issuebot.github.Issue;
 import io.spring.issuebot.github.Page;
@@ -37,29 +38,34 @@ class RepositoryMonitor {
 
 	private final GitHubOperations gitHub;
 
-	private final MonitoredRepository repository;
+	private final List<Repository> repositories;
 
-	private final List<IssueListener> issueListeners;
+	private final List<MultiRepositoryIssueListener> issueListeners;
 
-	RepositoryMonitor(GitHubOperations gitHub, MonitoredRepository repository,
-			List<IssueListener> issueListeners) {
+	RepositoryMonitor(GitHubOperations gitHub, List<Repository> repositories,
+			List<MultiRepositoryIssueListener> issueListeners) {
 		this.gitHub = gitHub;
-		this.repository = repository;
+		this.repositories = repositories;
 		this.issueListeners = issueListeners;
 	}
 
 	@Scheduled(fixedRate = 5 * 60 * 1000)
 	void monitor() {
-		log.info("Monitoring {}/{}", this.repository.getOrganization(),
-				this.repository.getName());
+		for (Repository repository : this.repositories) {
+			monitor(repository);
+		}
+	}
+
+	private void monitor(Repository repository) {
+		log.info("Monitoring {}/{}", repository.getOrganization(), repository.getName());
 		try {
-			Page<Issue> page = this.gitHub.getIssues(this.repository.getOrganization(),
-					this.repository.getName());
+			Page<Issue> page = this.gitHub.getIssues(repository.getOrganization(),
+					repository.getName());
 			while (page != null) {
 				for (Issue issue : page.getContent()) {
-					for (IssueListener issueListener : this.issueListeners) {
+					for (MultiRepositoryIssueListener issueListener : this.issueListeners) {
 						try {
-							issueListener.onOpenIssue(issue);
+							issueListener.onOpenIssue(repository, issue);
 						}
 						catch (Exception ex) {
 							log.warn("Listener '{}' failed when handling issue '{}'",
@@ -71,10 +77,11 @@ class RepositoryMonitor {
 			}
 		}
 		catch (Exception ex) {
-			log.warn("A failure occurred during issue monitoring", ex);
+			log.warn("A failure occurred during monitoring of {}/{}",
+					repository.getOrganization(), repository.getName(), ex);
 		}
-		log.info("Monitoring of {}/{} completed", this.repository.getOrganization(),
-				this.repository.getName());
+		log.info("Monitoring of {}/{} completed", repository.getOrganization(),
+				repository.getName());
 	}
 
 }
