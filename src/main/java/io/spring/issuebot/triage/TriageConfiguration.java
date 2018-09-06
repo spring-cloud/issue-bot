@@ -17,8 +17,16 @@
 package io.spring.issuebot.triage;
 
 import java.util.Arrays;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import io.spring.issuebot.GitHubProperties;
+import io.spring.issuebot.IssueListener;
+import io.spring.issuebot.MonitoringProperties;
+import io.spring.issuebot.MonitoringProperties.Repository;
+import io.spring.issuebot.MultiRepositoryIssueListener;
+import io.spring.issuebot.RoutingMultiRepositoryIssueListener;
 import io.spring.issuebot.github.GitHubOperations;
 
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -35,12 +43,23 @@ import org.springframework.context.annotation.Configuration;
 class TriageConfiguration {
 
 	@Bean
-	TriageIssueListener triageIssueListener(GitHubOperations gitHubOperations,
-			TriageProperties triageProperties, GitHubProperties gitHubProperties) {
+	MultiRepositoryIssueListener triageIssueListener(GitHubOperations gitHubOperations,
+			TriageProperties triageProperties, MonitoringProperties monitoringProperties,
+			GitHubProperties gitHubProperties) {
+		Map<Repository, IssueListener> delegates = monitoringProperties.getRepositories()
+				.stream()
+				.collect(Collectors.toMap(Function.identity(),
+						(repository) -> createListener(repository, gitHubOperations,
+								triageProperties)));
+		return new RoutingMultiRepositoryIssueListener(delegates);
+	}
+
+	private TriageIssueListener createListener(Repository repository,
+			GitHubOperations gitHubOperations, TriageProperties triageProperties) {
 		return new TriageIssueListener(
 				Arrays.asList(
 						new OpenedByCollaboratorTriageFilter(
-								gitHubProperties.getRepository().getCollaborators()),
+								repository.getCollaborators()),
 						new LabelledTriageFilter(), new MilestoneAppliedTriageFilter()),
 				new LabelApplyingTriageListener(gitHubOperations,
 						triageProperties.getLabel()));
