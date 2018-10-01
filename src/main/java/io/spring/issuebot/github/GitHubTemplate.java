@@ -25,6 +25,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.slf4j.Logger;
@@ -165,12 +166,17 @@ public class GitHubTemplate implements GitHubOperations {
 				new RequestEntity<Void>(HttpMethod.DELETE, URI.create(
 						issue.getLabelsUrl().replace("{/name}", "/" + encodedName))),
 				Label[].class);
+		List<Label> labels;
 		if (response.getStatusCode() != HttpStatus.OK) {
 			log.warn("Failed to remove label from issue. Response status: "
 					+ response.getStatusCode());
+			labels = Collections.emptyList();
+		}
+		else {
+			labels = Arrays.asList(response.getBody());
 		}
 		return new Issue(issue.getUrl(), issue.getCommentsUrl(), issue.getEventsUrl(),
-				issue.getLabelsUrl(), issue.getUser(), Arrays.asList(response.getBody()),
+				issue.getLabelsUrl(), issue.getUser(), labels,
 				issue.getMilestone(), issue.getPullRequest());
 	}
 
@@ -209,13 +215,24 @@ public class GitHubTemplate implements GitHubOperations {
 				return super.read(type, contextClass, inputMessage);
 			}
 			catch (IOException ex) {
-				throw ex;
+				if (inputMessage instanceof ClientHttpResponse) {
+					ClientHttpResponse response = (ClientHttpResponse) inputMessage;
+					if (response.getStatusCode().is2xxSuccessful()) {
+						throw ex;
+					}
+				}
 			}
 			catch (HttpMessageNotReadableException ex) {
-				log.error("Failed to create {} from {}", type.getTypeName(),
-						read(inputMessage), ex);
-				throw ex;
+				if (inputMessage instanceof ClientHttpResponse) {
+					ClientHttpResponse response = (ClientHttpResponse) inputMessage;
+					if (response.getStatusCode().is2xxSuccessful()) {
+						log.error("Failed to create {} from {}", type.getTypeName(),
+								read(inputMessage), ex);
+						throw ex;
+					}
+				}
 			}
+			return null;
 		}
 
 		private String read(HttpInputMessage inputMessage) throws IOException {
