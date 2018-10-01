@@ -156,7 +156,17 @@ public class Event {
 		/**
 		 * The pull request's branch was restored.
 		 */
-		HEAD_REF_RESTORED("head_ref_restored");
+		HEAD_REF_RESTORED("head_ref_restored"),
+
+		/**
+		 * Something was added to project.
+		 */
+		ADDED_TO_PROJECT("added_to_project"),
+
+		/**
+		 * Something was removed from project.
+		 */
+		REMOVED_FROM_PROJECT("removed_from_project");
 
 		private String type;
 
