@@ -176,8 +176,8 @@ public class GitHubTemplate implements GitHubOperations {
 			labels = Arrays.asList(response.getBody());
 		}
 		return new Issue(issue.getUrl(), issue.getCommentsUrl(), issue.getEventsUrl(),
-				issue.getLabelsUrl(), issue.getUser(), labels,
-				issue.getMilestone(), issue.getPullRequest());
+				issue.getLabelsUrl(), issue.getUser(), labels, issue.getMilestone(),
+				issue.getPullRequest());
 	}
 
 	@Override
