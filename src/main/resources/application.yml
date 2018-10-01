@@ -1,20 +1,65 @@
+spring-cloud-contributors:
+  - adriancole
+  - dsyer
+  - marcingrzejszczak
+  - OlgaMaciaszek
+  - ryanjbaxter
+  - spencergibb
+
 issuebot:
   monitoring:
     repositories:
-      - organization: spring-projects
-        name: spring-boot
-        collaborators:
-          - bclozel
-          - mbhave
-          - philwebb
-          - snicoll
-          - wilkinsona
+      - organization: spring-cloud
+        name: spring-cloud-aws
+        collaborators: ${spring-cloud-contributors}
+      - organization: spring-cloud
+        name: spring-cloud-build
+        collaborators: ${spring-cloud-contributors}
+      - organization: spring-cloud
+        name: spring-cloud-bus
+        collaborators: ${spring-cloud-contributors}
+      - organization: spring-cloud
+        name: spring-cloud-cloudfoundry
+        collaborators: ${spring-cloud-contributors}
+      - organization: spring-cloud
+        name: spring-cloud-commons
+        collaborators: ${spring-cloud-contributors}
+      - organization: spring-cloud
+        name: spring-cloud-config
+        collaborators: ${spring-cloud-contributors}
+      - organization: spring-cloud
+        name: spring-cloud-consul
+        collaborators: ${spring-cloud-contributors}
+      - organization: spring-cloud
+        name: spring-cloud-contract
+        collaborators: ${spring-cloud-contributors}
+      - organization: spring-cloud
+        name: spring-cloud-gateway
+        collaborators: ${spring-cloud-contributors}
+      - organization: spring-cloud
+        name: spring-cloud-kubernetes
+        collaborators: ${spring-cloud-contributors}
+      - organization: spring-cloud
+        name: spring-cloud-netflix
+        collaborators: ${spring-cloud-contributors}
+      - organization: spring-cloud
+        name: spring-cloud-openfeign
+        collaborators: ${spring-cloud-contributors}
+      - organization: spring-cloud
+        name: spring-cloud-security
+        collaborators: ${spring-cloud-contributors}
+      - organization: spring-cloud
+        name: spring-cloud-sleuth
+        collaborators: ${spring-cloud-contributors}
+      - organization: spring-cloud
+        name: spring-cloud-zookeeper
+        collaborators: ${spring-cloud-contributors}
   triage:
-    label: "status: waiting-for-triage"
+    label: "waiting-for-triage"
   feedback:
-    required_label: "status: waiting-for-feedback"
-    provided_label: "status: feedback-provided"
-    reminder_label: "status: feedback-reminder"
+    required_label: "waiting-for-feedback"
+    provided_label: "feedback-provided"
+    reminder_label: "feedback-reminder"
     reminder_comment: >
       If you would like us to look at this issue, please provide the requested
       information. If the information is not provided within the next 7 days this issue
