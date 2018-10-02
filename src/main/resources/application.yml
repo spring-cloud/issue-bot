@@ -67,3 +67,8 @@ issuebot:
     close_comment: >
       Closing due to lack of requested feedback. If you would like us to look at this
       issue, please provide the requested information and we will re-open the issue.
+  question:
+    label: "question"
+    close_comment: >
+      Closing due to age of the question. If you would like us to look at this
+      issue, please comment and we will look at re-opening the issue.
