@@ -20,6 +20,8 @@ import java.time.OffsetDateTime;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * An event that has been performed on an {@link Issue}.
@@ -27,6 +29,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  * @author Andy Wilkinson
  */
 public class Event {
+
+	private static final Logger log = LoggerFactory.getLogger(Event.class);
 
 	private final Type type;
 
@@ -69,39 +73,9 @@ public class Event {
 	public enum Type {
 
 		/**
-		 * The issue was closed by the actor.
+		 * The issue was added to a project board.
 		 */
-		CLOSED("closed"),
-
-		/**
-		 * The issue was reopened by the actor.
-		 */
-		REOPENED("reopened"),
-
-		/**
-		 * The actor subscribed to receive notifications for an issue.
-		 */
-		SUBSCRIBED("subscribed"),
-
-		/**
-		 * The actor unsubscribed from receibing notifications for an issue.
-		 */
-		UNSUBSCRIBED("unsubscribed"),
-
-		/**
-		 * The issue was merged by the actor.
-		 */
-		MERGED("merged"),
-
-		/**
-		 * The issue was referenced from a commit message.
-		 */
-		REFERENCED("referenced"),
-
-		/**
-		 * The actor was {@code @mentioned} in an issue body.
-		 */
-		MENTIONED("mentioned"),
+		ADDED_TO_PROJECT("added_to_project"),
 
 		/**
 		 * The issue was assigned to the actor.
@@ -109,44 +83,24 @@ public class Event {
 		ASSIGNED("assigned"),
 
 		/**
-		 * The actor was unassigned from the issue.
+		 * The issue was closed by the actor.
 		 */
-		UNASSIGNED("unassigned"),
+		CLOSED("closed"),
 
 		/**
-		 * A label was added to the issue.
+		 * A comment on the issue has been deleted by the actor.
 		 */
-		LABELED("labeled"),
+		COMMENT_DELETED("comment_deleted"),
 
 		/**
-		 * A label was removed from the issue.
+		 * The issue was created by converting a note in a project board to an issue.
 		 */
-		UNLABELED("unlabeled"),
-
-		/**
-		 * The issue was added to a milestone.
-		 */
-		MILESTONED("milestoned"),
+		CONVERTED_NOTE_TO_ISSUE("converted_note_to_issue"),
 
 		/**
 		 * The issue was removed from a milestone.
 		 */
 		DEMILESTONED("demilestoned"),
-
-		/**
-		 * The issue title was changed.
-		 */
-		RENAMED("renamed"),
-
-		/**
-		 * The issue was locked by the actor.
-		 */
-		LOCKED("locked"),
-
-		/**
-		 * The issue was unlocked by the actor.
-		 */
-		UNLOCKED("unlocked"),
 
 		/**
 		 * The pull request's branch was deleted.
@@ -159,16 +113,106 @@ public class Event {
 		HEAD_REF_RESTORED("head_ref_restored"),
 
 		/**
-		 * Something was added to project.
+		 * A label was added to the issue.
 		 */
-		ADDED_TO_PROJECT("added_to_project"),
+		LABELED("labeled"),
 
 		/**
-		 * Something was removed from project.
+		 * The issue was locked by the actor.
 		 */
-		REMOVED_FROM_PROJECT("removed_from_project");
+		LOCKED("locked"),
 
-		private String type;
+		/**
+		 * The issue was marked as a duplicate.
+		 */
+		MARKED_AS_DUPLICATE("marked_as_duplicate"),
+
+		/**
+		 * The actor was {@code @mentioned} in an issue body.
+		 */
+		MENTIONED("mentioned"),
+
+		/**
+		 * The issue was merged by the actor.
+		 */
+		MERGED("merged"),
+
+		/**
+		 * The issue was added to a milestone.
+		 */
+		MILESTONED("milestoned"),
+
+		/**
+		 * The issue was moved between columns in a project board.
+		 */
+		MOVED_COLUMNS_IN_PROJECT("moved_columns_in_project"),
+
+		/**
+		 * The issue was referenced from a commit message.
+		 */
+		REFERENCED("referenced"),
+
+		/**
+		 * The issue was removed from a project board.
+		 */
+		REMOVED_FROM_PROJECT("removed_from_project"),
+
+		/**
+		 * The issue title was changed.
+		 */
+		RENAMED("renamed"),
+
+		/**
+		 * The issue was reopened by the actor.
+		 */
+		REOPENED("reopened"),
+
+		/**
+		 * The actor dismissed a review from the pull request.
+		 */
+		REVIEW_DISMISSED("review_dismissed"),
+
+		/**
+		 * The actor requested a review from the subject on the pull request.
+		 */
+		REVIEW_REQUESTED("review_requested"),
+
+		/**
+		 * The actor removed the review request from the subject on the pull request.
+		 */
+		REVIEW_REQUEST_REMOVED("review_request_removed"),
+
+		/**
+		 * The actor subscribed to receive notifications for an issue.
+		 */
+		SUBSCRIBED("subscribed"),
+
+		/**
+		 * The actor was unassigned from the issue.
+		 */
+		UNASSIGNED("unassigned"),
+
+		/**
+		 * A label was removed from the issue.
+		 */
+		UNLABELED("unlabeled"),
+
+		/**
+		 * The issue was unlocked by the actor.
+		 */
+		UNLOCKED("unlocked"),
+
+		/**
+		 * The issue was unmarked as a duplicate.
+		 */
+		UNMARKED_AS_DUPLICATE("unmarked_as_duplicate"),
+
+		/**
+		 * The actor unsubscribed from receiving notifications for an issue.
+		 */
+		UNSUBSCRIBED("unsubscribed");
+
+		private final String type;
 
 		Type(String type) {
 			this.type = type;
@@ -180,8 +224,10 @@ public class Event {
 					return value;
 				}
 			}
-			throw new IllegalArgumentException(
-					"'" + type + "' is not a valid event type");
+			if (log.isInfoEnabled()) {
+				log.info("Received unknown event type '" + type + "'");
+			}
+			return null;
 		}
 
 	}
