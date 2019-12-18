@@ -54,6 +54,9 @@ issuebot:
       - organization: spring-cloud
         name: spring-cloud-zookeeper
         collaborators: ${spring-cloud-contributors}
+      - organization: spring-cloud
+        name: spring-cloud-circuitbreaker
+        collaborators: ${spring-cloud-contributors}
   triage:
     label: "waiting-for-triage"
   feedback:
