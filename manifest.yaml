@@ -1,0 +1,8 @@
+---
+applications:
+  - name: spring-cloud-issue-bot
+    memory: 2048M
+    path: ./target/issue-bot-0.1.0-SNAPSHOT.jar
+    env:
+      ISSUEBOT_GITHUB_CREDENTIALS_PASSWORD: setpasswordhere
+      ISSUEBOT_GITHUB_CREDENTIALS_USERNAME: spring-issuemaster
