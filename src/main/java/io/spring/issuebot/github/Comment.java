@@ -39,8 +39,7 @@ public final class Comment {
 	 * @param creationTime the creation time
 	 */
 	@JsonCreator
-	public Comment(@JsonProperty("user") User user,
-			@JsonProperty("created_at") OffsetDateTime creationTime) {
+	public Comment(@JsonProperty("user") User user, @JsonProperty("created_at") OffsetDateTime creationTime) {
 		this.user = user;
 		this.creationTime = creationTime;
 	}

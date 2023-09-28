@@ -26,7 +26,7 @@ import io.spring.issuebot.github.Issue;
 import io.spring.issuebot.github.Label;
 import io.spring.issuebot.github.PullRequest;
 import io.spring.issuebot.github.StandardPage;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
@@ -44,25 +44,23 @@ public class QuestionIssueListenerTests {
 
 	private final IssueListener issueListener = mock(IssueListener.class);
 
-	private final IssueListener listener = new QuestionIssueListener(this.gitHub,
-			"question", "Closing old question", Arrays.asList(this.issueListener));
+	private final IssueListener listener = new QuestionIssueListener(this.gitHub, "question", "Closing old question",
+			Arrays.asList(this.issueListener));
 
 	@Test
 	public void nonQuestionsAreIgnored() {
-		Issue issue = new Issue(null, null, null, null, null,
-				Arrays.asList(new Label("foo")), null, new PullRequest("url"));
+		Issue issue = new Issue(null, null, null, null, null, Arrays.asList(new Label("foo")), null,
+				new PullRequest("url"));
 		this.listener.onOpenIssue(issue);
 		verifyNoMoreInteractions(this.gitHub, this.issueListener);
 	}
 
 	@Test
 	public void questionsLessThanSixMonthsAreIgnored() {
-		Issue issue = new Issue(null, null, null, null, null,
-				Arrays.asList(new Label("question")), null, null);
+		Issue issue = new Issue(null, null, null, null, null, Arrays.asList(new Label("question")), null, null);
 		OffsetDateTime requestTime = OffsetDateTime.now();
 		given(this.gitHub.getEvents(issue)).willReturn(new StandardPage<>(
-				Arrays.asList(new Event("labeled", requestTime, new Label("required"))),
-				() -> null));
+				Arrays.asList(new Event("labeled", requestTime, new Label("required"))), () -> null));
 		this.listener.onOpenIssue(issue);
 		verify(this.gitHub).getEvents(issue);
 		verifyNoMoreInteractions(this.gitHub);
@@ -70,12 +68,11 @@ public class QuestionIssueListenerTests {
 
 	@Test
 	public void questionsOlderThanSixMonthsAreClosed() {
-		Issue issue = new Issue("http://github/old/issue", null, null, null, null,
-				Arrays.asList(new Label("question")), null, null);
+		Issue issue = new Issue("http://github/old/issue", null, null, null, null, Arrays.asList(new Label("question")),
+				null, null);
 		OffsetDateTime requestTime = OffsetDateTime.now().minusMonths(7);
 		given(this.gitHub.getEvents(issue)).willReturn(new StandardPage<>(
-				Arrays.asList(new Event("labeled", requestTime, new Label("question"))),
-				() -> null));
+				Arrays.asList(new Event("labeled", requestTime, new Label("question"))), () -> null));
 		this.listener.onOpenIssue(issue);
 		verify(this.gitHub).addComment(issue, "Closing old question");
 		verify(this.gitHub).close(issue);

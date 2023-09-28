@@ -18,7 +18,7 @@ package io.spring.issuebot.github;
 
 import java.util.Map;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -56,8 +56,7 @@ public class RegexLinkParserTests {
 
 	@Test
 	public void multipleLinks() {
-		Map<String, String> links = this.linkParser
-				.parse("<url-one>; rel=\"foo\", <url-two>; rel=\"bar\"");
+		Map<String, String> links = this.linkParser.parse("<url-one>; rel=\"foo\", <url-two>; rel=\"bar\"");
 		assertThat(links).hasSize(2);
 		assertThat(links).containsEntry("foo", "url-one");
 		assertThat(links).containsEntry("bar", "url-two");

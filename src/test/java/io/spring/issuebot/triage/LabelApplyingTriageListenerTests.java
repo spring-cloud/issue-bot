@@ -18,7 +18,7 @@ package io.spring.issuebot.triage;
 
 import io.spring.issuebot.github.GitHubOperations;
 import io.spring.issuebot.github.Issue;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
@@ -32,8 +32,7 @@ public class LabelApplyingTriageListenerTests {
 
 	private GitHubOperations gitHub = mock(GitHubOperations.class);
 
-	private final LabelApplyingTriageListener listener = new LabelApplyingTriageListener(
-			this.gitHub, "test");
+	private final LabelApplyingTriageListener listener = new LabelApplyingTriageListener(this.gitHub, "test");
 
 	@Test
 	public void requiresTriage() {

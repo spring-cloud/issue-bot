@@ -20,7 +20,7 @@ import java.util.Arrays;
 
 import io.spring.issuebot.github.Issue;
 import io.spring.issuebot.github.User;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -31,21 +31,17 @@ import static org.assertj.core.api.Assertions.assertThat;
  */
 public class OpenedByCollaboratorTriageFilterTests {
 
-	private TriageFilter filter = new OpenedByCollaboratorTriageFilter(
-			Arrays.asList("Adam", "Brenda", "Charlie"));
+	private TriageFilter filter = new OpenedByCollaboratorTriageFilter(Arrays.asList("Adam", "Brenda", "Charlie"));
 
 	@Test
 	public void openedByCollaborator() {
-		assertThat(this.filter.triaged(
-				new Issue(null, null, null, null, new User("Adam"), null, null, null)))
-						.isTrue();
+		assertThat(this.filter.triaged(new Issue(null, null, null, null, new User("Adam"), null, null, null))).isTrue();
 	}
 
 	@Test
 	public void openedByAnotherUser() {
-		assertThat(this.filter.triaged(
-				new Issue(null, null, null, null, new User("Debbie"), null, null, null)))
-						.isFalse();
+		assertThat(this.filter.triaged(new Issue(null, null, null, null, new User("Debbie"), null, null, null)))
+			.isFalse();
 	}
 
 }

@@ -31,14 +31,12 @@ import org.slf4j.LoggerFactory;
  */
 final class OpenedByCollaboratorTriageFilter implements TriageFilter {
 
-	private static final Logger log = LoggerFactory
-			.getLogger(OpenedByCollaboratorTriageFilter.class);
+	private static final Logger log = LoggerFactory.getLogger(OpenedByCollaboratorTriageFilter.class);
 
 	private final List<String> collaborators;
 
 	OpenedByCollaboratorTriageFilter(List<String> collaborators) {
-		this.collaborators = (collaborators != null) ? collaborators
-				: Collections.emptyList();
+		this.collaborators = (collaborators != null) ? collaborators : Collections.emptyList();
 	}
 
 	@Override

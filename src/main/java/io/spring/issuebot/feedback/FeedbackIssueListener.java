@@ -43,8 +43,7 @@ final class FeedbackIssueListener implements IssueListener {
 
 	private final FeedbackListener feedbackListener;
 
-	FeedbackIssueListener(GitHubOperations gitHub, String labelName,
-			List<String> collaborators, String username,
+	FeedbackIssueListener(GitHubOperations gitHub, String labelName, List<String> collaborators, String username,
 			FeedbackListener feedbackListener) {
 		this.gitHub = gitHub;
 		this.labelName = labelName;
@@ -90,8 +89,7 @@ final class FeedbackIssueListener implements IssueListener {
 		Page<Event> page = this.gitHub.getEvents(issue);
 		while (page != null) {
 			for (Event event : page.getContent()) {
-				if (Event.Type.LABELED.equals(event.getType())
-						&& this.labelName.equals(event.getLabel().getName())) {
+				if (Event.Type.LABELED.equals(event.getType()) && this.labelName.equals(event.getLabel().getName())) {
 					createdAt = event.getCreationTime();
 				}
 			}

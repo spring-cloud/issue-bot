@@ -59,8 +59,7 @@ class RepositoryMonitor {
 	private void monitor(Repository repository) {
 		log.info("Monitoring {}/{}", repository.getOrganization(), repository.getName());
 		try {
-			Page<Issue> page = this.gitHub.getIssues(repository.getOrganization(),
-					repository.getName());
+			Page<Issue> page = this.gitHub.getIssues(repository.getOrganization(), repository.getName());
 			while (page != null) {
 				for (Issue issue : page.getContent()) {
 					for (MultiRepositoryIssueListener issueListener : this.issueListeners) {
@@ -68,8 +67,7 @@ class RepositoryMonitor {
 							issueListener.onOpenIssue(repository, issue);
 						}
 						catch (Exception ex) {
-							log.warn("Listener '{}' failed when handling issue '{}'",
-									issueListener, issue, ex);
+							log.warn("Listener '{}' failed when handling issue '{}'", issueListener, issue, ex);
 						}
 					}
 				}
@@ -77,11 +75,10 @@ class RepositoryMonitor {
 			}
 		}
 		catch (Exception ex) {
-			log.warn("A failure occurred during monitoring of {}/{}",
-					repository.getOrganization(), repository.getName(), ex);
+			log.warn("A failure occurred during monitoring of {}/{}", repository.getOrganization(),
+					repository.getName(), ex);
 		}
-		log.info("Monitoring of {}/{} completed", repository.getOrganization(),
-				repository.getName());
+		log.info("Monitoring of {}/{} completed", repository.getOrganization(), repository.getName());
 	}
 
 }
