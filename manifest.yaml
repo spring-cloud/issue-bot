@@ -6,3 +6,4 @@ applications:
     env:
       ISSUEBOT_GITHUB_CREDENTIALS_PASSWORD: setpasswordhere
       ISSUEBOT_GITHUB_CREDENTIALS_USERNAME: spring-cloud-issues
+      JBP_CONFIG_OPEN_JDK_JRE: '{ jre: { version: 17.0.1_12 }}'
