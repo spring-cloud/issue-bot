@@ -24,7 +24,7 @@ import io.spring.issuebot.IssueListener;
 import io.spring.issuebot.github.GitHubOperations;
 import io.spring.issuebot.github.Issue;
 import io.spring.issuebot.github.Label;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
@@ -41,13 +41,11 @@ public class StandardFeedbackListenerTests {
 
 	private final IssueListener issueListener = mock(IssueListener.class);
 
-	private final FeedbackListener listener = new StandardFeedbackListener(this.gitHub,
-			"feedback-provided", "feedback-required", "feedback-reminder",
-			"Please provide requested feedback", "Closing due to lack of feedback",
-			Arrays.asList(this.issueListener));
+	private final FeedbackListener listener = new StandardFeedbackListener(this.gitHub, "feedback-provided",
+			"feedback-required", "feedback-reminder", "Please provide requested feedback",
+			"Closing due to lack of feedback", Arrays.asList(this.issueListener));
 
-	private final Issue issue = new Issue(null, null, null, null, null, new ArrayList<>(),
-			null, null);
+	private final Issue issue = new Issue(null, null, null, null, null, new ArrayList<>(), null, null);
 
 	@Test
 	public void feedbackProvided() {

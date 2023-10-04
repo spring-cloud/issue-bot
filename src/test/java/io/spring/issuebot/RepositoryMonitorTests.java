@@ -22,8 +22,8 @@ import io.spring.issuebot.MonitoringProperties.Repository;
 import io.spring.issuebot.github.GitHubOperations;
 import io.spring.issuebot.github.Issue;
 import io.spring.issuebot.github.Page;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.willThrow;
@@ -40,11 +40,9 @@ public class RepositoryMonitorTests {
 
 	private final GitHubOperations gitHub = mock(GitHubOperations.class);
 
-	private final MultiRepositoryIssueListener issueListenerOne = mock(
-			MultiRepositoryIssueListener.class);
+	private final MultiRepositoryIssueListener issueListenerOne = mock(MultiRepositoryIssueListener.class);
 
-	private final MultiRepositoryIssueListener issueListenerTwo = mock(
-			MultiRepositoryIssueListener.class);
+	private final MultiRepositoryIssueListener issueListenerTwo = mock(MultiRepositoryIssueListener.class);
 
 	private final Repository repositoryOne = new Repository();
 
@@ -54,7 +52,7 @@ public class RepositoryMonitorTests {
 			Arrays.asList(this.repositoryOne, this.repositoryTwo),
 			Arrays.asList(this.issueListenerOne, this.issueListenerTwo));
 
-	@Before
+	@BeforeEach
 	public void setUp() {
 		this.repositoryOne.setOrganization("test");
 		this.repositoryOne.setName("one");
@@ -113,8 +111,7 @@ public class RepositoryMonitorTests {
 		Issue issue = new Issue(null, null, null, null, null, null, null, null);
 		given(page.getContent()).willReturn(Arrays.asList(issue));
 		given(this.gitHub.getIssues("test", "one")).willReturn(page);
-		willThrow(new RuntimeException()).given(this.issueListenerOne)
-				.onOpenIssue(this.repositoryOne, issue);
+		willThrow(new RuntimeException()).given(this.issueListenerOne).onOpenIssue(this.repositoryOne, issue);
 		this.repositoryMonitor.monitor();
 		verify(this.issueListenerOne).onOpenIssue(this.repositoryOne, issue);
 		verify(this.issueListenerTwo).onOpenIssue(this.repositoryOne, issue);

@@ -43,19 +43,17 @@ import org.springframework.context.annotation.Configuration;
 class QuestionConfiguration {
 
 	@Bean
-	MultiRepositoryIssueListener questionIssueListener(
-			MonitoringProperties monitoringProperties, GitHubOperations gitHub,
-			QuestionProperties questionProperties) {
+	MultiRepositoryIssueListener questionIssueListener(MonitoringProperties monitoringProperties,
+			GitHubOperations gitHub, QuestionProperties questionProperties) {
 		Map<Repository, IssueListener> delegates = monitoringProperties.getRepositories()
-				.stream().collect(Collectors.toMap(Function.identity(),
-						(repository) -> createListener(gitHub, questionProperties)));
+			.stream()
+			.collect(Collectors.toMap(Function.identity(), (repository) -> createListener(gitHub, questionProperties)));
 		return new RoutingMultiRepositoryIssueListener(delegates);
 	}
 
-	private QuestionIssueListener createListener(GitHubOperations gitHub,
-			QuestionProperties questionProperties) {
-		return new QuestionIssueListener(gitHub, questionProperties.getLabel(),
-				questionProperties.getCloseComment(), Collections.emptyList());
+	private QuestionIssueListener createListener(GitHubOperations gitHub, QuestionProperties questionProperties) {
+		return new QuestionIssueListener(gitHub, questionProperties.getLabel(), questionProperties.getCloseComment(),
+				Collections.emptyList());
 	}
 
 }

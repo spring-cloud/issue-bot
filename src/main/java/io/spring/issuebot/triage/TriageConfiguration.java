@@ -47,22 +47,18 @@ class TriageConfiguration {
 			TriageProperties triageProperties, MonitoringProperties monitoringProperties,
 			GitHubProperties gitHubProperties) {
 		Map<Repository, IssueListener> delegates = monitoringProperties.getRepositories()
-				.stream()
-				.collect(Collectors.toMap(Function.identity(),
-						(repository) -> createListener(repository, gitHubOperations,
-								triageProperties)));
+			.stream()
+			.collect(Collectors.toMap(Function.identity(),
+					(repository) -> createListener(repository, gitHubOperations, triageProperties)));
 		return new RoutingMultiRepositoryIssueListener(delegates);
 	}
 
-	private TriageIssueListener createListener(Repository repository,
-			GitHubOperations gitHubOperations, TriageProperties triageProperties) {
+	private TriageIssueListener createListener(Repository repository, GitHubOperations gitHubOperations,
+			TriageProperties triageProperties) {
 		return new TriageIssueListener(
-				Arrays.asList(
-						new OpenedByCollaboratorTriageFilter(
-								repository.getCollaborators()),
+				Arrays.asList(new OpenedByCollaboratorTriageFilter(repository.getCollaborators()),
 						new LabelledTriageFilter(), new MilestoneAppliedTriageFilter()),
-				new LabelApplyingTriageListener(gitHubOperations,
-						triageProperties.getLabel()));
+				new LabelApplyingTriageListener(gitHubOperations, triageProperties.getLabel()));
 	}
 
 }

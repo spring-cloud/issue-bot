@@ -45,8 +45,7 @@ public class Event {
 	 * @param label the label associated with the event
 	 */
 	@JsonCreator
-	public Event(@JsonProperty("event") String type,
-			@JsonProperty("created_at") OffsetDateTime creationTime,
+	public Event(@JsonProperty("event") String type, @JsonProperty("created_at") OffsetDateTime creationTime,
 			@JsonProperty("label") Label label) {
 		this.type = Type.valueFrom(type);
 		this.creationTime = creationTime;

@@ -87,8 +87,7 @@ final class QuestionIssueListener implements IssueListener {
 		Page<Event> page = this.gitHub.getEvents(issue);
 		while (page != null) {
 			for (Event event : page.getContent()) {
-				if (Event.Type.LABELED.equals(event.getType())
-						&& this.labelName.equals(event.getLabel().getName())) {
+				if (Event.Type.LABELED.equals(event.getType()) && this.labelName.equals(event.getLabel().getName())) {
 					createdAt = event.getCreationTime();
 				}
 			}

@@ -20,7 +20,7 @@ import java.util.Arrays;
 
 import io.spring.issuebot.IssueListener;
 import io.spring.issuebot.github.Issue;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;

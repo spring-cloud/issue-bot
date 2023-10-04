@@ -44,29 +44,23 @@ import org.springframework.context.annotation.Configuration;
 class FeedbackConfiguration {
 
 	@Bean
-	MultiRepositoryIssueListener feedbackIssueListener(
-			MonitoringProperties monitoringProperties, GitHubOperations gitHub,
-			GitHubProperties githubProperties, FeedbackProperties feedbackProperties) {
+	MultiRepositoryIssueListener feedbackIssueListener(MonitoringProperties monitoringProperties,
+			GitHubOperations gitHub, GitHubProperties githubProperties, FeedbackProperties feedbackProperties) {
 		Map<Repository, IssueListener> delegates = monitoringProperties.getRepositories()
-				.stream()
-				.collect(Collectors.toMap(Function.identity(),
-						(repository) -> createListener(repository, gitHub,
-								githubProperties, feedbackProperties)));
+			.stream()
+			.collect(Collectors.toMap(Function.identity(),
+					(repository) -> createListener(repository, gitHub, githubProperties, feedbackProperties)));
 		return new RoutingMultiRepositoryIssueListener(delegates);
 	}
 
-	private FeedbackIssueListener createListener(Repository repository,
-			GitHubOperations gitHub, GitHubProperties githubProperties,
-			FeedbackProperties feedbackProperties) {
-		return new FeedbackIssueListener(gitHub, feedbackProperties.getRequiredLabel(),
-				repository.getCollaborators(),
+	private FeedbackIssueListener createListener(Repository repository, GitHubOperations gitHub,
+			GitHubProperties githubProperties, FeedbackProperties feedbackProperties) {
+		return new FeedbackIssueListener(gitHub, feedbackProperties.getRequiredLabel(), repository.getCollaborators(),
 				githubProperties.getCredentials().getUsername(),
-				new StandardFeedbackListener(gitHub,
-						feedbackProperties.getProvidedLabel(),
-						feedbackProperties.getRequiredLabel(),
-						feedbackProperties.getReminderLabel(),
-						feedbackProperties.getReminderComment(),
-						feedbackProperties.getCloseComment(), Collections.emptyList()));
+				new StandardFeedbackListener(gitHub, feedbackProperties.getProvidedLabel(),
+						feedbackProperties.getRequiredLabel(), feedbackProperties.getReminderLabel(),
+						feedbackProperties.getReminderComment(), feedbackProperties.getCloseComment(),
+						Collections.emptyList()));
 	}
 
 }

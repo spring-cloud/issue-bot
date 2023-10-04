@@ -28,7 +28,7 @@ import io.spring.issuebot.github.Label;
 import io.spring.issuebot.github.PullRequest;
 import io.spring.issuebot.github.StandardPage;
 import io.spring.issuebot.github.User;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
@@ -46,117 +46,98 @@ public class FeedbackIssueListenerTests {
 
 	private final FeedbackListener feedbackListener = mock(FeedbackListener.class);
 
-	private final IssueListener listener = new FeedbackIssueListener(this.gitHub,
-			"required", Arrays.asList("Amy", "Brian"), "IssueBot", this.feedbackListener);
+	private final IssueListener listener = new FeedbackIssueListener(this.gitHub, "required",
+			Arrays.asList("Amy", "Brian"), "IssueBot", this.feedbackListener);
 
 	@Test
 	public void pullRequestsAreIgnored() {
-		Issue issue = new Issue(null, null, null, null, null,
-				Arrays.asList(new Label("required")), null, new PullRequest("url"));
+		Issue issue = new Issue(null, null, null, null, null, Arrays.asList(new Label("required")), null,
+				new PullRequest("url"));
 		this.listener.onOpenIssue(issue);
 		verifyNoMoreInteractions(this.gitHub, this.feedbackListener);
 	}
 
 	@Test
 	public void issuesWithFeedbackRequiredLabelAreIgnored() {
-		Issue issue = new Issue(null, null, null, null, null,
-				Arrays.asList(new Label("something-else")), null, null);
+		Issue issue = new Issue(null, null, null, null, null, Arrays.asList(new Label("something-else")), null, null);
 		this.listener.onOpenIssue(issue);
 		verifyNoMoreInteractions(this.gitHub, this.feedbackListener);
 	}
 
 	@Test
 	public void feedbackRequiredForLabeledIssueWithEvent() {
-		Issue issue = new Issue(null, null, null, null, null,
-				Arrays.asList(new Label("required")), null, null);
+		Issue issue = new Issue(null, null, null, null, null, Arrays.asList(new Label("required")), null, null);
 		OffsetDateTime requestTime = OffsetDateTime.now();
 		given(this.gitHub.getEvents(issue)).willReturn(new StandardPage<>(
-				Arrays.asList(new Event("labeled", requestTime, new Label("required"))),
-				() -> null));
+				Arrays.asList(new Event("labeled", requestTime, new Label("required"))), () -> null));
 		this.listener.onOpenIssue(issue);
 		verify(this.feedbackListener).feedbackRequired(issue, requestTime);
 	}
 
 	@Test
 	public void feedbackProvidedAfterCommentFromNonCollaborator() {
-		Issue issue = new Issue("issue_url", null, null, null, null,
-				Arrays.asList(new Label("required")), null, null);
+		Issue issue = new Issue("issue_url", null, null, null, null, Arrays.asList(new Label("required")), null, null);
 		OffsetDateTime requestTime = OffsetDateTime.now().minusDays(1);
 		given(this.gitHub.getEvents(issue)).willReturn(new StandardPage<>(
-				Arrays.asList(new Event("labeled", requestTime, new Label("required"))),
-				() -> null));
-		given(this.gitHub.getComments(issue)).willReturn(new StandardPage<>(
-				Arrays.asList(new Comment(new User("Charlie"), OffsetDateTime.now())),
-				() -> null));
+				Arrays.asList(new Event("labeled", requestTime, new Label("required"))), () -> null));
+		given(this.gitHub.getComments(issue)).willReturn(
+				new StandardPage<>(Arrays.asList(new Comment(new User("Charlie"), OffsetDateTime.now())), () -> null));
 		this.listener.onOpenIssue(issue);
 		verify(this.feedbackListener).feedbackProvided(issue);
 	}
 
 	@Test
 	public void feedbackRequiredAfterCommentFromNonCollaboratorBeforeRequest() {
-		Issue issue = new Issue("issue_url", null, null, null, null,
-				Arrays.asList(new Label("required")), null, null);
+		Issue issue = new Issue("issue_url", null, null, null, null, Arrays.asList(new Label("required")), null, null);
 		OffsetDateTime requestTime = OffsetDateTime.now().minusDays(1);
 		given(this.gitHub.getEvents(issue)).willReturn(new StandardPage<>(
-				Arrays.asList(new Event("labeled", requestTime, new Label("required"))),
-				() -> null));
-		given(this.gitHub.getComments(issue)).willReturn(new StandardPage<>(Arrays.asList(
-				new Comment(new User("Charlie"), OffsetDateTime.now().minusDays(2))),
-				() -> null));
+				Arrays.asList(new Event("labeled", requestTime, new Label("required"))), () -> null));
+		given(this.gitHub.getComments(issue)).willReturn(new StandardPage<>(
+				Arrays.asList(new Comment(new User("Charlie"), OffsetDateTime.now().minusDays(2))), () -> null));
 		this.listener.onOpenIssue(issue);
 		verify(this.feedbackListener).feedbackRequired(issue, requestTime);
 	}
 
 	@Test
 	public void feedbackRequiredAfterCommentFromCollaborator() {
-		Issue issue = new Issue(null, null, null, null, null,
-				Arrays.asList(new Label("required")), null, null);
+		Issue issue = new Issue(null, null, null, null, null, Arrays.asList(new Label("required")), null, null);
 		OffsetDateTime requestTime = OffsetDateTime.now().minusDays(1);
 		given(this.gitHub.getEvents(issue)).willReturn(new StandardPage<>(
-				Arrays.asList(new Event("labeled", requestTime, new Label("required"))),
-				() -> null));
-		given(this.gitHub.getComments(issue)).willReturn(new StandardPage<>(
-				Arrays.asList(new Comment(new User("Amy"), OffsetDateTime.now())),
-				() -> null));
+				Arrays.asList(new Event("labeled", requestTime, new Label("required"))), () -> null));
+		given(this.gitHub.getComments(issue)).willReturn(
+				new StandardPage<>(Arrays.asList(new Comment(new User("Amy"), OffsetDateTime.now())), () -> null));
 		this.listener.onOpenIssue(issue);
 		verify(this.feedbackListener).feedbackRequired(issue, requestTime);
 	}
 
 	@Test
 	public void feedbackRequiredAfterCommentFromIssueBot() {
-		Issue issue = new Issue(null, null, null, null, null,
-				Arrays.asList(new Label("required")), null, null);
+		Issue issue = new Issue(null, null, null, null, null, Arrays.asList(new Label("required")), null, null);
 		OffsetDateTime requestTime = OffsetDateTime.now().minusDays(1);
 		given(this.gitHub.getEvents(issue)).willReturn(new StandardPage<>(
-				Arrays.asList(new Event("labeled", requestTime, new Label("required"))),
-				() -> null));
-		given(this.gitHub.getComments(issue)).willReturn(new StandardPage<>(
-				Arrays.asList(new Comment(new User("IssueBot"), OffsetDateTime.now())),
-				() -> null));
+				Arrays.asList(new Event("labeled", requestTime, new Label("required"))), () -> null));
+		given(this.gitHub.getComments(issue)).willReturn(
+				new StandardPage<>(Arrays.asList(new Comment(new User("IssueBot"), OffsetDateTime.now())), () -> null));
 		this.listener.onOpenIssue(issue);
 		verify(this.feedbackListener).feedbackRequired(issue, requestTime);
 	}
 
 	@Test
 	public void issueWithNoMatchingLabeledEventIsIgnored() {
-		Issue issue = new Issue(null, null, null, null, null,
-				Arrays.asList(new Label("required")), null, null);
+		Issue issue = new Issue(null, null, null, null, null, Arrays.asList(new Label("required")), null, null);
 		OffsetDateTime requestTime = OffsetDateTime.now();
 		given(this.gitHub.getEvents(issue)).willReturn(new StandardPage<>(
-				Arrays.asList(
-						new Event("labeled", requestTime, new Label("something-else"))),
-				() -> null));
+				Arrays.asList(new Event("labeled", requestTime, new Label("something-else"))), () -> null));
 		this.listener.onOpenIssue(issue);
 		verifyNoMoreInteractions(this.feedbackListener);
 	}
 
 	@Test
 	public void eventsWithWrongTypeAreIgnored() {
-		Issue issue = new Issue(null, null, null, null, null,
-				Arrays.asList(new Label("required")), null, null);
+		Issue issue = new Issue(null, null, null, null, null, Arrays.asList(new Label("required")), null, null);
 		OffsetDateTime requestTime = OffsetDateTime.now();
-		given(this.gitHub.getEvents(issue)).willReturn(new StandardPage<>(
-				Arrays.asList(new Event("milestoned", requestTime, null)), () -> null));
+		given(this.gitHub.getEvents(issue))
+			.willReturn(new StandardPage<>(Arrays.asList(new Event("milestoned", requestTime, null)), () -> null));
 		this.listener.onOpenIssue(issue);
 		verifyNoMoreInteractions(this.feedbackListener);
 	}

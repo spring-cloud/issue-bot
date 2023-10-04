@@ -45,9 +45,8 @@ final class StandardFeedbackListener implements FeedbackListener {
 
 	private final List<IssueListener> issueListeners;
 
-	StandardFeedbackListener(GitHubOperations gitHub, String providedLabel,
-			String requiredLabel, String reminderLabel, String reminderComment,
-			String closeComment, List<IssueListener> issueListeners) {
+	StandardFeedbackListener(GitHubOperations gitHub, String providedLabel, String requiredLabel, String reminderLabel,
+			String reminderComment, String closeComment, List<IssueListener> issueListeners) {
 		this.gitHub = gitHub;
 		this.providedLabel = providedLabel;
 		this.requiredLabel = requiredLabel;
