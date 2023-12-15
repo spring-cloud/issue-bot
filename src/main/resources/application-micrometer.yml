@@ -1,0 +1,39 @@
+project-contributors:
+  - marcingrzejszczak
+  - jonatan-ivanov
+  - shakuzen
+  - ttddyy
+
+issuebot:
+  monitoring:
+    repositories:
+      - organization: micrometer-metrics
+        name: micrometer
+        collaborators: ${project-contributors}
+      - organization: micrometer-metrics
+        name: tracing
+        collaborators: ${project-contributors}
+      - organization: micrometer-metrics
+        name: context-propagation
+        collaborators: ${project-contributors}
+      - organization: micrometer-metrics
+        name: micrometer-docs-generator
+        collaborators: ${project-contributors}
+  triage:
+    label: "waiting-for-triage"
+  feedback:
+    required_label: "waiting for feedback"
+    provided_label: "feedback-provided"
+    reminder_label: "feedback-reminder"
+    reminder_comment: >
+      If you would like us to look at this issue, please provide the requested
+      information. If the information is not provided within the next 7 days this issue
+      will be closed.
+    close_comment: >
+      Closing due to lack of requested feedback. If you would like us to look at this
+      issue, please provide the requested information and we will re-open the issue.
+  question:
+    label: "question"
+    close_comment: >
+      Closing due to age of the question. If you would like us to look at this
+      issue, please comment and we will look at re-opening the issue.
